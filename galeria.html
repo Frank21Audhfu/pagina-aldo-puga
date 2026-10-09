@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería de Proyectos | Aldo Puga Arquitectura</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+<style>
+/* =========================================================
+   GALERÍA — DISEÑO PREMIUM / ORDENADO
+========================================================= */
+.seccion-galeria {
+    padding: 145px 0 110px;
+    background:
+        radial-gradient(circle at 15% 10%, rgba(197,168,128,.055), transparent 28%),
+        radial-gradient(circle at 85% 55%, rgba(255,255,255,.025), transparent 30%),
+        var(--bg-color, #0a0a0a);
+}
+.galeria-cabecera {
+    max-width: 900px;
+    margin: 0 auto 65px;
+    padding: 0 0 28px;
+    border-bottom: 1px solid rgba(255,255,255,.10);
+    position: relative;
+}
+.galeria-cabecera::after {
+    content: "";
+    display: block;
+    width: 70px;
+    height: 2px;
+    margin-top: 22px;
+    background: var(--accent-gold, #c5a880);
+}
+.galeria-cabecera h1 {
+    margin: 0;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 5vw, 68px);
+    line-height: 1.05;
+    letter-spacing: -.025em;
+    color: var(--white, #fff);
+}
+.galeria-cabecera .texto-italica-serif {
+    color: var(--accent-gold, #c5a880);
+}
+/* Grid más elegante y respirado */
+.galeria-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 30px;
+    max-width: 1180px;
+    margin: 0 auto;
+}
+/* Tarjetas */
+.galeria-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #111;
+    border: 1px solid rgba(255,255,255,.08);
+    aspect-ratio: 4 / 3;
+    transform: translateY(24px);
+    opacity: 0;
+    box-shadow: 0 18px 45px rgba(0,0,0,.18);
+    transition:
+        transform .7s cubic-bezier(.16,1,.3,1),
+        opacity .7s ease,
+        border-color .35s ease,
+        box-shadow .35s ease;
+}
+.galeria-item.visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+.galeria-item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        transparent 58%,
+        rgba(0,0,0,.28)
+    );
+    pointer-events: none;
+    opacity: .55;
+    transition: opacity .35s ease;
+}
+.galeria-item:hover {
+    transform: translateY(-7px);
+    border-color: rgba(197,168,128,.42);
+    box-shadow: 0 28px 60px rgba(0,0,0,.38);
+}
+.galeria-item:hover::after {
+    opacity: .15;
+}
+.galeria-item img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    filter: grayscale(7%) brightness(.94);
+    cursor: zoom-in;
+    will-change: transform;
+    transition:
+        transform .8s cubic-bezier(.19,1,.22,1),
+        filter .5s ease;
+}
+.galeria-item:hover img {
+    transform: scale(1.055);
+    filter: grayscale(0%) brightness(1.04);
+}
+/* Botón volver arriba */
+.btn-volver-arriba {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    left: auto;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    border-radius: 50%;
+    background: rgba(15,15,15,.88);
+    border: 1px solid rgba(255,255,255,.14);
+    color: var(--white,#fff);
+    text-decoration: none;
+    box-shadow: 0 12px 30px rgba(0,0,0,.45);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all .3s cubic-bezier(.19,1,.22,1);
+}
+.btn-volver-arriba.visible {
+    opacity: 1;
+    visibility: visible;
+}
+.btn-volver-arriba:hover {
+    border-color: var(--accent-gold,#c5a880);
+    background: var(--accent-gold,#c5a880);
+    color: #0a0a0a;
+    transform: translateY(-4px);
+}
+/* Lightbox */
+.lightbox-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background: rgba(5,5,5,.965);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    opacity: 0;
+    transition: opacity .4s ease;
+}
+.lightbox-modal.activo {
+    display: flex;
+    opacity: 1;
+}
+.lightbox-contenido {
+    max-width: min(92%, 1400px);
+    max-height: 86vh;
+    border-radius: 8px;
+    object-fit: contain;
+    border: 1px solid rgba(255,255,255,.14);
+    box-shadow: 0 35px 90px rgba(0,0,0,.85);
+    transform: scale(.95);
+    transition: transform .4s cubic-bezier(.19,1,.22,1);
+}
+.lightbox-modal.activo .lightbox-contenido {
+    transform: scale(1);
+}
+.lightbox-cerrar {
+    position: absolute;
+    top: 24px;
+    right: 32px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 38px;
+    font-family: 'Manrope',sans-serif;
+    font-weight: 200;
+    cursor: pointer;
+    background: rgba(0,0,0,.35);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 50%;
+    outline: none;
+    line-height: 1;
+    transition: all .3s ease;
+}
+.lightbox-cerrar:hover {
+    color: #0a0a0a;
+    background: var(--accent-gold,#c5a880);
+    border-color: var(--accent-gold,#c5a880);
+    transform: rotate(90deg);
+}
+/* Botón WhatsApp flotante */
+.whatsapp-flotante {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    width: 56px;
+    height: 56px;
+    background: #25D366;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9998;
+    box-shadow: 0 6px 20px rgba(37,211,102,.35);
+    transition: all .3s ease;
+}
+.whatsapp-flotante:hover {
+    transform: scale(1.1) translateY(-3px);
+    color: #fff;
+}
+/* Preloader y barra de progreso */
+.preloader {
+    position: fixed;
+    inset: 0;
+    background: #040404;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    transition: opacity .5s ease, visibility .5s ease;
+}
+.preloader.oculto {
+    opacity: 0;
+    visibility: hidden;
+}
+.logo-carga {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: #c5a880;
+}
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #c5a880, #d4b894);
+    width: 0%;
+    z-index: 99999;
+    transition: width .1s ease;
+}
+/* Navegación compartida */
+.navbar {
+    position: fixed;
+    top: 0; left: 0; width: 100%;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 25px 5%;
+    background: rgba(4,4,4,.95);
+    backdrop-filter: blur(15px);
+    z-index: 1000;
+    border-bottom: 1px solid transparent;
+    transition: all .4s ease;
+}
+.navbar.scrolled {
+    padding: 18px 5%;
+    background: rgba(4,4,4,.98);
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    box-shadow: 0 4px 30px rgba(0,0,0,.3);
+}
+.logo a {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: #f4f1ea;
+    text-decoration: none;
+    letter-spacing: 3px;
+    font-weight: 700;
+}
+.menu-btn {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    z-index: 1001;
+}
+.menu-btn span {
+    width: 25px;
+    height: 2px;
+    background: #f4f1ea;
+    transition: .3s;
+}
+.nav-links {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+.nav-links a {
+    color: #a3a3a3;
+    text-decoration: none;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: color .3s ease;
+    font-weight: 600;
+}
+.nav-links a:hover, .nav-links a.enlace-activo {
+    color: #c5a880;
+}
+.contenedor {
+    max-width: 1350px;
+    margin: 0 auto;
+    padding: 0 6%;
+}
+footer {
+    padding: 40px 0;
+    background: #020202;
+    border-top: 1px solid rgba(255,255,255,.07);
+    text-align: center;
+    color: #a3a3a3;
+    font-size: 13px;
+    letter-spacing: 2px;
+}
+/* Responsive */
+@media (max-width: 1100px) {
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 280px;
+        background: #0a0a0a;
+        flex-direction: column;
+        padding: 80px 30px;
+        gap: 20px;
+        border-left: 1px solid rgba(255,255,255,.07);
+        transition: right .4s ease;
+    }
+    .nav-links.activo { right: 0; }
+    .menu-btn { display: flex; }
+}
+@media (max-width: 1000px) {
+    .galeria-grid {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        gap: 22px;
+    }
+    .galeria-cabecera {
+        margin-bottom: 48px;
+    }
+}
+@media (max-width: 650px) {
+    .seccion-galeria {
+        padding: 120px 0 70px;
+    }
+    .galeria-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+    .galeria-cabecera {
+        margin-bottom: 38px;
+        padding-bottom: 22px;
+    }
+    .galeria-cabecera h1 {
+        font-size: clamp(38px,11vw,52px);
+    }
+    .btn-volver-arriba {
+        right: 18px;
+        bottom: 90px;
+        width: 44px;
+        height: 44px;
+    }
+    .whatsapp-flotante {
+        left: 18px;
+        bottom: 18px;
+        width: 50px;
+        height: 50px;
+    }
+    .lightbox-modal {
+        padding: 18px;
+    }
+    .lightbox-cerrar {
+        top: 16px;
+        right: 16px;
+        width: 42px;
+        height: 42px;
+    }
+}
+</style>
+</head>
+<body>
+    <div class="preloader"><div class="logo-carga">ALDO PUGA</div></div>
+    <div class="scroll-progress" id="scroll-progress"></div>
+    <header class="navbar" id="navbar">
+        <div class="logo"><a href="index.html">ALDO PUGA</a></div>
+        <div class="menu-btn" id="menuBtn"><span></span><span></span><span></span></div>
+        <nav class="nav-links" id="navLinks">
+            <a href="index.html">Inicio</a>
+            <a href="nosotros.html">Nosotros</a>
+            <a href="servicios.html">Servicios</a>
+            <a href="proyectos.html">Proyectos</a>
+            <a href="galeria.html" class="enlace-activo">Galería</a>
+            <a href="equipo.html">Equipo</a>
+            <a href="contacto.html">Contacto</a>
+        </nav>
+    </header>
+
+    <section class="seccion-galeria">
+        <div class="contenedor">
+            
+            <div class="galeria-cabecera reveal">
+                <h1>Galería de <span class="texto-italica-serif">Proyectos</span>.</h1>
+            </div>
+            <!-- Grid optimizada para los 102 proyectos -->
+            <div class="galeria-grid" id="galeriaGrid"></div>
+        </div>
+    </section>
+
+    <!-- Botón Flotante para Volver Arriba -->
+    <a href="#" class="btn-volver-arriba" id="btnVolverArriba" title="Volver arriba">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </a>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox-modal" id="lightboxModal">
+        <button class="lightbox-cerrar" id="lightboxCerrar">&times;</button>
+        <img class="lightbox-contenido" id="lightboxImg" alt="Proyecto Ampliado">
+    </div>
+
+    <!-- Botón Global WhatsApp -->
+    <a href="https://wa.me/51945331051?text=Hola,%20estoy%20interesado%20en%20los%20proyectos%20de%20arquitectura%20de%20Aldo%20Puga" 
+       class="whatsapp-flotante" target="_blank" title="Contáctanos por WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+        </svg>
+    </a>
+
+    <footer>
+        <div class="contenedor">
+            <p>© 2026 Aldo Puga - Arquitectura y Construcción.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Ocultar preloader al cargar todo
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelector('.preloader').classList.add('oculto');
+            }, 400);
+        });
+
+        // Barra de progreso de scroll
+        const scrollProgress = document.getElementById('scroll-progress');
+        window.addEventListener('scroll', () => {
+            const altoTotal = document.body.scrollHeight - window.innerHeight;
+            const progreso = (window.scrollY / altoTotal) * 100;
+            scrollProgress.style.width = progreso + '%';
+        });
+
+        // Navbar efecto al scrollear
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Menú móvil
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('activo');
+        });
+
+        // Cerrar menú al hacer clic en un enlace
+        navLinks.querySelectorAll('a').forEach(enlace => {
+            enlace.addEventListener('click', () => {
+                navLinks.classList.remove('activo');
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const grid = document.getElementById("galeriaGrid");
+            // Carga ultrarrápida usando DocumentFragment para evitar bloqueos de renderizado
+            const fragmento = document.createDocumentFragment();
+            for (let i = 1; i <= 102; i++) {
+                let esPng = i <= 35;
+                let extPrincipal = esPng ? "png" : "jpg";
+                let extRespaldo = esPng ? "jpg" : "png";
+                const item = document.createElement("div");
+                item.className = "galeria-item";
+                item.innerHTML = `
+                    <img src="imagenes/Render${i}.${extPrincipal}" 
+                         alt="Proyecto ${i}" 
+                         loading="lazy" 
+                         onerror="this.src='imagenes/Render${i}.${extRespaldo}'">
+                `;
+                fragmento.appendChild(item);
+            }
+            grid.appendChild(fragmento);
+
+            // Intersection Observer para animar la aparición de las imágenes al hacer scroll
+            const itemsGaleria = document.querySelectorAll('.galeria-item');
+            const observador = new IntersectionObserver((entradas, obs) => {
+                entradas.forEach(entrada => {
+                    if (entrada.isIntersecting) {
+                        entrada.target.classList.add('visible');
+                        obs.unobserve(entrada.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            itemsGaleria.forEach(item => observador.observe(item));
+
+            // Botón Volver Arriba
+            const btnVolverArriba = document.getElementById('btnVolverArriba');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 400) {
+                    btnVolverArriba.classList.add('visible');
+                } else {
+                    btnVolverArriba.classList.remove('visible');
+                }
+            });
+            btnVolverArriba.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // Lightbox Profesional
+            const lightboxModal = document.getElementById('lightboxModal');
+            const lightboxImg = document.getElementById('lightboxImg');
+            const lightboxCerrar = document.getElementById('lightboxCerrar');
+            
+            grid.addEventListener('click', (e) => {
+                const imgClickeada = e.target.closest('.galeria-item img');
+                if (imgClickeada) {
+                    lightboxImg.src = imgClickeada.src;
+                    lightboxModal.classList.add('activo');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+            
+            function cerrarLightbox() {
+                lightboxModal.classList.remove('activo');
+                document.body.style.overflow = '';
+                setTimeout(() => { lightboxImg.src = ''; }, 400);
+            }
+            
+            lightboxCerrar.addEventListener('click', cerrarLightbox);
+            lightboxModal.addEventListener('click', (e) => {
+                if (e.target === lightboxModal) {
+                    cerrarLightbox();
+                }
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    cerrarLightbox();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

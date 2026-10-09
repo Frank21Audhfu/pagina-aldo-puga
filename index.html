@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aldo Puga | Arquitectura y Construcción de Élite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+:root {
+    --bg-color: #040404;
+    --bg-surface: #0a0a0a;
+    --card-bg: #0e0e0e;
+    --card-hover: #141414;
+    --white: #f4f1ea;
+    --text-muted: #a3a3a3;
+    --accent-gold: #c5a880;
+    --border-color: rgba(197, 168, 128, 0.2);
+    --border-subtle: rgba(255, 255, 255, 0.07);
+    --transition-smooth: all 0.4s ease;
+    --shadow-suave: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background-color: var(--bg-color);
+    color: var(--white);
+    font-family: 'Manrope', sans-serif;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+a, button { cursor: pointer; border: none; background: none; font-family: inherit; }
+.contenedor { max-width: 1350px; margin: 0 auto; padding: 0 6%; }
+.subtitulo { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: var(--accent-gold); display: block; margin-bottom: 10px; font-weight: 700; }
+.texto-italica-serif { font-family: 'Playfair Display', serif; font-style: italic; color: var(--accent-gold); }
+
+/* Barra de Progreso */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-gold), #d4b894);
+    width: 0%;
+    z-index: 99999;
+    transition: width 0.1s ease;
+}
+
+/* Navegación */
+.navbar {
+    position: fixed;
+    top: 0; left: 0; width: 100%;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 25px 5%;
+    background: rgba(4, 4, 4, 0.95);
+    backdrop-filter: blur(15px);
+    z-index: 1000;
+    border-bottom: 1px solid transparent;
+    transition: var(--transition-smooth);
+}
+.navbar.scrolled {
+    padding: 18px 5%;
+    background: rgba(4, 4, 4, 0.98);
+    border-bottom: 1px solid var(--border-subtle);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+}
+.logo a {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: 3px;
+    font-weight: 700;
+}
+.menu-btn { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+.menu-btn span { width: 25px; height: 2px; background: var(--white); transition: 0.3s; }
+.nav-links { display: flex; gap: 25px; align-items: center; }
+.nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: color 0.3s ease;
+    font-weight: 600;
+}
+.nav-links a:hover, .nav-links a.enlace-activo { color: var(--accent-gold); }
+
+/* Hero */
+.hero-seccion { height: 100vh; width: 100%; display: flex; align-items: center; position: relative; overflow: hidden; padding-top: 80px; }
+.hero-video-bg { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translate(-50%, -50%); object-fit: cover; z-index: 0; filter: brightness(0.6); }
+.hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, rgba(4,4,4,0.95) 0%, rgba(4,4,4,0.4) 100%); z-index: 1; }
+.hero-contenido { max-width: 950px; z-index: 2; position: relative; }
+.hero-contenido h1 { font-family: 'Playfair Display', serif; font-size: clamp(46px, 7.5vw, 90px); line-height: 1.08; margin-bottom: 25px; font-weight: 700; }
+.hero-contenido p { color: var(--text-muted); font-size: clamp(16px, 2.2vw, 19.5px); line-height: 1.85; max-width: 700px; margin-bottom: 45px; }
+.hero-botones { display: flex; gap: 20px; flex-wrap: wrap; }
+.btn-primario, .btn-secundario { padding: 18px 38px; border-radius: 4px; font-size: 11.5px; text-transform: uppercase; letter-spacing: 2.5px; text-decoration: none; font-weight: 700; transition: var(--transition-smooth); }
+.btn-primario { background: var(--accent-gold); color: #040404; border: 1px solid var(--accent-gold); }
+.btn-primario:hover { background: transparent; color: var(--accent-gold); transform: translateY(-2px); }
+.btn-secundario { background: transparent; color: #fff; border: 1px solid var(--border-color); }
+.btn-secundario:hover { border-color: var(--accent-gold); color: var(--accent-gold); background: rgba(197, 168, 128, 0.05); transform: translateY(-2px); }
+
+/* Manifiesto */
+.seccion-manifiesto { padding: 150px 0; background-color: var(--bg-surface); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); }
+.manifiesto-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 70px; align-items: center; }
+.manifiesto-texto h2 { font-family: 'Playfair Display', serif; font-size: clamp(34px, 4.5vw, 50px); line-height: 1.2; margin-bottom: 25px; }
+.manifiesto-texto p { color: var(--text-muted); font-size: 16px; line-height: 1.9; margin-bottom: 20px; }
+.manifiesto-imagen img { width: 100%; border-radius: 8px; border: 1px solid var(--border-color); transition: transform 0.5s ease; }
+.manifiesto-imagen:hover img { transform: scale(1.02); }
+
+/* Destacados */
+.seccion-destacados { padding: 150px 0; }
+.destacados-cabecera { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 70px; flex-wrap: wrap; gap: 20px; }
+.destacados-cabecera h2 { font-family: 'Playfair Display', serif; font-size: clamp(38px, 5vw, 56px); margin: 0; }
+.enlace-ver-todos { color: var(--accent-gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2.5px; transition: 0.3s; }
+.enlace-ver-todos:hover { letter-spacing: 3.5px; color: var(--white); }
+.destacados-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 35px; }
+.destacado-card { background: var(--card-bg); border: 1px solid var(--border-subtle); border-radius: 8px; overflow: hidden; text-decoration: none; display: block; transition: var(--transition-smooth); }
+.destacado-card:hover { transform: translateY(-8px); border-color: var(--border-color); background: var(--card-hover); box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+.destacado-img-wrap { aspect-ratio: 4 / 3; overflow: hidden; }
+.destacado-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s ease; }
+.destacado-card:hover .destacado-img-wrap img { transform: scale(1.06); }
+.destacado-info { padding: 40px; }
+.destacado-info span { font-size: 10px; text-transform: uppercase; letter-spacing: 2.5px; color: var(--accent-gold); display: block; margin-bottom: 10px; }
+.destacado-info h3 { font-family: 'Playfair Display', serif; font-size: 26px; color: #fff; margin: 0; }
+
+/* BOTÓN VOLVER ARRIBA */
+.boton-volver-arriba {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--accent-gold);
+    color: var(--bg-color);
+    border-radius: 50%;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-suave);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: var(--transition-smooth);
+    z-index: 999;
+}
+.boton-volver-arriba.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.boton-volver-arriba:hover {
+    background-color: #d4b894;
+    transform: translateY(-3px);
+}
+
+/* Footer */
+footer {
+    padding: 60px 0;
+    background-color: #020202;
+    border-top: 1px solid var(--border-subtle);
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    letter-spacing: 2px;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+    .nav-links { position: fixed; top: 0; right: -100%; height: 100vh; width: 280px; background: #0a0a0a; flex-direction: column; padding: 80px 30px; gap: 20px; border-left: 1px solid var(--border-subtle); transition: right 0.4s ease; }
+    .nav-links.activo { right: 0; }
+    .menu-btn { display: flex; z-index: 1001; }
+}
+@media (max-width: 900px) {
+    .manifiesto-grid, .destacados-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+    .boton-volver-arriba { bottom: 25px; right: 25px; width: 44px; height: 44px; font-size: 18px; }
+    .hero-botones { flex-direction: column; width: 100%; }
+    .btn-primario, .btn-secundario { width: 100%; text-align: center; }
+}
+    </style>
+</head>
+<body>
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <header class="navbar" id="navbar">
+        <div class="logo"><a href="index.html">ALDO PUGA</a></div>
+        <div class="menu-btn" id="menuBtn"><span></span><span></span><span></span></div>
+        <nav class="nav-links" id="navLinks">
+            <a href="index.html" class="enlace-activo">Inicio</a>
+            <a href="nosotros.html">Nosotros</a>
+            <a href="servicios.html">Servicios</a>
+            <a href="proyectos.html">Proyectos</a>
+            <a href="galeria.html">Galería</a>
+            <a href="equipo.html">Equipo</a>
+            <a href="contacto.html">Contacto</a>
+        </nav>
+    </header>
+
+    <section class="hero-seccion">
+        <video class="hero-video-bg" id="heroVideo" autoplay muted loop playsinline preload="auto">
+            <source src="imagenes/video.perpe.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="contenedor" style="position: relative; z-index: 2; width: 100%;">
+            <div class="hero-contenido">
+                <span class="subtitulo">Estudio de Arquitectura & Construcción</span>
+                <h1>Diseñando el futuro con <span class="texto-italica-serif">elegancia</span> y precisión.</h1>
+                <p>Conceptualizamos residencias exclusivas, espacios comerciales memorables y volúmenes arquitectónicos de altísima gama en Trujillo y todo el Perú. Transformamos ideas complejas en realidades tangibles de valor atemporal.</p>
+                <div class="hero-botones">
+                    <a href="proyectos.html" class="btn-primario">Ver Proyectos</a>
+                    <a href="galeria.html" class="btn-secundario">Explorar Galería De Proyectos</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="seccion-manifiesto">
+        <div class="contenedor">
+            <div class="manifiesto-grid">
+                <div class="manifiesto-texto">
+                    <span class="subtitulo">Nuestra Esencia</span>
+                    <h2>Excelencia espacial sin concesiones.</h2>
+                    <p>En el estudio de arquitectura Aldo Puga entendemos que cada proyecto es un reflejo de la personalidad y las aspiraciones de quienes lo habitan. Por ello, combinamos la volumetría contemporánea con un estudio riguroso de la luz natural, la orientación y los materiales nobles.</p>
+                    <p>Nuestro compromiso abarca desde los primeros trazos en papel y modelados tridimensionales hasta la supervisión milimétrica en obra, garantizando acabados impecables y duraderos.</p>
+                </div>
+                <div class="manifiesto-imagen">
+                    <img src="imagenes/Render1.png" alt="Arquitectura Aldo Puga" onerror="this.src='imagenes/Render1.jpg'">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="seccion-destacados">
+        <div class="contenedor">
+            <div class="destacados-cabecera">
+                <div>
+                    <span class="subtitulo">Portafolio Selecto</span>
+                    <h2>Obras <span class="texto-italica-serif">Destacadas</span>.</h2>
+                </div>
+                <a href="proyectos.html" class="enlace-ver-todos">Ver todos los proyectos →</a>
+            </div>
+            <div class="destacados-grid">
+                <a href="proyecto-detalle.html?obra=pedregal" class="destacado-card">
+                    <div class="destacado-img-wrap">
+                        <img src="imagenes/Pedregal 4.jpg" alt="Pedregal" loading="lazy" onerror="this.src='imagenes/Render1.png'">
+                    </div>
+                    <div class="destacado-info">
+                        <span>Residencial Exclusivo</span>
+                        <h3>Proyecto Pedregal</h3>
+                    </div>
+                </a>
+                <a href="proyecto-detalle.html?obra=tarapoto" class="destacado-card">
+                    <div class="destacado-img-wrap">
+                        <img src="imagenes/Tarapoto 1.jpg" alt="Tarapoto" loading="lazy" onerror="this.src='imagenes/Render2.png'">
+                    </div>
+                    <div class="destacado-info">
+                        <span>Arquitectura en Selva</span>
+                        <h3>Proyecto Tarapoto</h3>
+                    </div>
+                </a>
+                <a href="proyecto-detalle.html?obra=domingo" class="destacado-card">
+                    <div class="destacado-img-wrap">
+                        <img src="imagenes/Domingo1.jpg" alt="Santo Domingo" loading="lazy" onerror="this.src='imagenes/Domingo1.png'">
+                    </div>
+                    <div class="destacado-info">
+                        <span>Residencial Urbano</span>
+                        <h3>Santo Domingo</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- BOTÓN VOLVER ARRIBA -->
+    <button class="boton-volver-arriba" id="btnVolverArriba" aria-label="Volver arriba">
+        ↑
+    </button>
+
+    <footer>
+        <div class="contenedor">
+            <p>© 2026 Aldo Puga - Arquitectura y Construcción.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Barra de progreso y navbar al hacer scroll
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById('scrollProgress').style.width = (winScroll / height) * 100 + '%';
+            
+            if (window.scrollY > 50) {
+                document.getElementById('navbar').classList.add('scrolled');
+            } else {
+                document.getElementById('navbar').classList.remove('scrolled');
+            }
+            
+            // Mostrar/ocultar botón volver arriba
+            if (window.scrollY > 300) {
+                document.getElementById('btnVolverArriba').classList.add('visible');
+            } else {
+                document.getElementById('btnVolverArriba').classList.remove('visible');
+            }
+        });
+
+        // Menú móvil
+        document.getElementById('menuBtn').addEventListener('click', () => {
+            document.getElementById('navLinks').classList.toggle('activo');
+        });
+
+        // Cerrar menú al hacer clic en un enlace
+        document.querySelectorAll('#navLinks a').forEach(enlace => {
+            enlace.addEventListener('click', () => {
+                document.getElementById('navLinks').classList.remove('activo');
+            });
+        });
+
+        // Reproducir video
+        const heroVideo = document.getElementById("heroVideo");
+        if (heroVideo) {
+            heroVideo.play().catch(e => console.log('Video autoplay bloqueado:', e));
+        }
+
+        // Volver arriba
+        document.getElementById('btnVolverArriba').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

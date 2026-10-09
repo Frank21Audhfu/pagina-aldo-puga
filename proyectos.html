@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyectos | Aldo Puga Arquitectura</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+:root {
+    --bg-color: #040404;
+    --bg-surface: #0a0a0a;
+    --card-bg: #0e0e0e;
+    --card-hover: #141414;
+    --white: #f4f1ea;
+    --text-muted: #a3a3a3;
+    --accent-gold: #c5a880;
+    --accent-soft: rgba(197, 168, 128, 0.12);
+    --border-color: rgba(197, 168, 128, 0.2);
+    --border-subtle: rgba(255, 255, 255, 0.07);
+    --transition-smooth: all 0.4s ease;
+    --shadow-suave: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background-color: var(--bg-color);
+    color: var(--white);
+    font-family: 'Manrope', sans-serif;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+a, button { cursor: pointer; border: none; background: none; font-family: inherit; }
+.contenedor { max-width: 1350px; margin: 0 auto; padding: 0 6%; }
+.subtitulo { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: var(--accent-gold); display: block; margin-bottom: 10px; font-weight: 700; }
+.texto-italica-serif { font-family: 'Playfair Display', serif; font-style: italic; color: var(--accent-gold); }
+
+/* Barra de Progreso */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-gold), #d4b894);
+    width: 0%;
+    z-index: 99999;
+    transition: width 0.1s ease;
+}
+
+/* Navegación */
+.navbar {
+    position: fixed;
+    top: 0; left: 0; width: 100%;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 25px 5%;
+    background: rgba(4, 4, 4, 0.95);
+    backdrop-filter: blur(15px);
+    z-index: 1000;
+    border-bottom: 1px solid transparent;
+    transition: var(--transition-smooth);
+}
+.navbar.scrolled {
+    padding: 18px 5%;
+    background: rgba(4, 4, 4, 0.98);
+    border-bottom: 1px solid var(--border-subtle);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+}
+.logo a {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: 3px;
+    font-weight: 700;
+}
+.menu-btn { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+.menu-btn span { width: 25px; height: 2px; background: var(--white); transition: 0.3s; }
+.nav-links { display: flex; gap: 25px; align-items: center; }
+.nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: color 0.3s ease;
+    font-weight: 600;
+}
+.nav-links a:hover, .nav-links a.enlace-activo { color: var(--accent-gold); }
+
+/* Sección Proyectos */
+.seccion-proyectos {
+    padding: 190px 0 150px 0;
+    background-color: var(--bg-color);
+}
+.proyectos-cabecera {
+    margin-bottom: 70px;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 50px;
+}
+.proyectos-cabecera h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(44px, 7vw, 78px);
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0 0 20px 0;
+}
+.proyectos-cabecera p {
+    color: var(--text-muted);
+    font-size: 17px;
+    line-height: 1.9;
+    max-width: 850px;
+}
+
+/* Navegación rápida */
+.proyectos-nav-rapido {
+    display: flex;
+    justify-content: flex-start;
+    gap: 12px;
+    margin-bottom: 80px;
+    flex-wrap: wrap;
+}
+.proyecto-nav-btn {
+    background: transparent;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-muted);
+    padding: 12px 24px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+}
+.proyecto-nav-btn:hover {
+    background: var(--accent-gold);
+    color: var(--bg-color);
+    border-color: var(--accent-gold);
+    transform: translateY(-3px);
+}
+
+/* Tarjetas de Proyectos */
+.proyecto-card-grande {
+    background: var(--card-bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 50px;
+    margin-bottom: 100px;
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+.proyecto-card-grande::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-gold), #d4b894);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+.proyecto-card-grande:hover {
+    border-color: var(--border-color);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+}
+.proyecto-card-grande:hover::before { transform: scaleX(1); }
+.proyecto-info {
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.proyecto-info-texto h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(30px, 4vw, 48px);
+    color: var(--white);
+    margin-bottom: 12px;
+}
+.proyecto-info-texto p {
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.9;
+    max-width: 800px;
+}
+.proyecto-badge-contador {
+    background: var(--accent-soft);
+    border: 1px solid var(--border-color);
+    color: var(--accent-gold);
+    padding: 10px 20px;
+    border-radius: 24px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+}
+
+/* Grid de imágenes */
+.proyecto-imagenes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+.proyecto-img-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #0d0d0d;
+    border: 1px solid transparent;
+    transition: var(--transition-smooth);
+    cursor: pointer;
+}
+.proyecto-img-item img {
+    width: 100%;
+    height: 270px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1), filter 0.5s ease;
+    filter: brightness(0.9);
+}
+.proyecto-img-item:hover img {
+    transform: scale(1.08);
+    filter: brightness(1.05);
+}
+.proyecto-img-item:hover { border-color: var(--accent-gold); }
+.proyecto-img-item.principal { grid-column: span 3; }
+.proyecto-img-item.principal img { height: 500px; }
+.proyecto-img-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+.proyecto-img-item:hover .proyecto-img-overlay { opacity: 1; }
+.proyecto-img-overlay span {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent-gold);
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+.proyecto-img-overlay h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--white);
+    margin: 0;
+}
+
+/* Lightbox */
+.lightbox-modal {
+    display: none;
+    position: fixed;
+    z-index: 999999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(5, 5, 5, 0.96);
+    backdrop-filter: blur(12px);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+.lightbox-modal.activo {
+    display: flex;
+    opacity: 1;
+}
+.lightbox-contenido {
+    max-width: 90%;
+    max-height: 85vh;
+    border-radius: 8px;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.85);
+    border: 1px solid var(--border-subtle);
+    transform: scale(0.95);
+    transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.lightbox-modal.activo .lightbox-contenido { transform: scale(1); }
+.lightbox-cerrar {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    color: var(--white);
+    font-size: 44px;
+    font-weight: 200;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    line-height: 1;
+}
+.lightbox-cerrar:hover { color: var(--accent-gold); }
+
+/* BOTÓN VOLVER ARRIBA */
+.boton-volver-arriba {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--accent-gold);
+    color: var(--bg-color);
+    border-radius: 50%;
+    font-size: 22px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-suave);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: var(--transition-smooth);
+    z-index: 999;
+    text-decoration: none;
+}
+.boton-volver-arriba.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.boton-volver-arriba:hover {
+    background-color: #d4b894;
+    transform: translateY(-3px);
+}
+
+/* Footer */
+footer {
+    padding: 60px 0;
+    background-color: #020202;
+    border-top: 1px solid var(--border-subtle);
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    letter-spacing: 2px;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+    .nav-links { position: fixed; top: 0; right: -100%; height: 100vh; width: 280px; background: #0a0a0a; flex-direction: column; padding: 80px 30px; gap: 20px; border-left: 1px solid var(--border-subtle); transition: right 0.4s ease; }
+    .nav-links.activo { right: 0; }
+    .menu-btn { display: flex; z-index: 1001; }
+}
+@media (max-width: 1024px) {
+    .proyecto-imagenes-grid { grid-template-columns: repeat(2, 1fr); }
+    .proyecto-img-item.principal { grid-column: span 2; }
+    .proyecto-img-item.principal img { height: 400px; }
+}
+@media (max-width: 900px) {
+    .seccion-proyectos { padding: 150px 0 100px 0; }
+    .proyecto-card-grande { padding: 30px; }
+}
+@media (max-width: 768px) {
+    .proyecto-imagenes-grid { grid-template-columns: 1fr; }
+    .proyecto-img-item.principal { grid-column: span 1; }
+    .proyecto-img-item.principal img { height: 280px; }
+    .proyecto-img-item img { height: 200px; }
+    .boton-volver-arriba { bottom: 25px; right: 25px; width: 44px; height: 44px; font-size: 18px; }
+}
+    </style>
+</head>
+<body>
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <header class="navbar" id="navbar">
+        <div class="logo"><a href="index.html">ALDO PUGA</a></div>
+        <div class="menu-btn" id="menuBtn"><span></span><span></span><span></span></div>
+        <nav class="nav-links" id="navLinks">
+            <a href="index.html">Inicio</a>
+            <a href="nosotros.html">Nosotros</a>
+            <a href="servicios.html">Servicios</a>
+            <a href="proyectos.html" class="enlace-activo">Proyectos</a>
+            <a href="galeria.html">Galería</a>
+            <a href="equipo.html">Equipo</a>
+            <a href="contacto.html">Contacto</a>
+        </nav>
+    </header>
+
+    <section class="seccion-proyectos">
+        <div class="contenedor">
+            <div class="proyectos-cabecera">
+                <span class="subtitulo">Portafolio Oficial</span>
+                <h1>Nuestros <span class="texto-italica-serif">Proyectos</span>.</h1>
+                <p>Explora la conceptualización, volumetría y acabados de nuestras principales obras. Pasa el cursor sobre las imágenes para ver el espacio y haz clic para ampliarlas en alta definición.</p>
+            </div>
+
+            <!-- Navegación rápida interna -->
+            <div class="proyectos-nav-rapido">
+                <a href="#domingo" class="proyecto-nav-btn">Santo Domingo</a>
+                <a href="#puerto" class="proyecto-nav-btn">Puerto Morín</a>
+                <a href="#espanola" class="proyecto-nav-btn">Española</a>
+                <a href="#huanchaco" class="proyecto-nav-btn">Huanchaco</a>
+                <a href="#luzsol" class="proyecto-nav-btn">Luz de Sol</a>
+                <a href="#montemar" class="proyecto-nav-btn">Montemar Moche</a>
+                <a href="#pedregal" class="proyecto-nav-btn">Pedregal</a>
+                <a href="#tarapoto" class="proyecto-nav-btn">Tarapoto</a>
+            </div>
+
+            <!-- 1. SANTO DOMINGO -->
+            <div class="proyecto-card-grande" id="domingo">
+                <div class="proyecto-info">
+                    <div class="proyecto-info-texto">
+                        <span class="subtitulo">Residencial Urbano</span>
+                        <h2>Santo Domingo</h2>
+                        <p>Proyecto residencial urbano caracterizado por su elegancia formal, volúmenes geométricos puros y distribución interior optimizada para el confort familiar en la ciudad.</p>
+                    </div>
+                    <div class="proyecto-badge-contador">4 Vistas 3D</div>
+                </div>
+                <div class="proyecto-imagenes-grid">
+                    <div class="proyecto-img-item principal" data-img="imagenes/Domingo1.jpg">
+                        <img src="imagenes/Domingo1.jpg" alt="Santo Domingo 1" loading="lazy" onerror="this.src='imagenes/Domingo1.png'">
+                        <div class="proyecto-img-overlay"><span>Santo Domingo</span><h4>Volumetría Urbana</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Domingo2.jpg">
+                        <img src="imagenes/Domingo2.jpg" alt="Santo Domingo 2" loading="lazy" onerror="this.src='imagenes/Domingo2.png'">
+                        <div class="proyecto-img-overlay"><span>Santo Domingo</span><h4>Perspectiva Superior 1</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Domingo3.jpg">
+                        <img src="imagenes/Domingo3.jpg" alt="Santo Domingo 3" loading="lazy" onerror="this.src='imagenes/Domingo3.png'">
+                        <div class="proyecto-img-overlay"><span>Santo Domingo</span><h4>Perspectiva Superior 2</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Domingo4.jpg">
+                        <img src="imagenes/Domingo4.jpg" alt="Santo Domingo 4" loading="lazy" onerror="this.src='imagenes/Domingo4.png'">
+                        <div class="proyecto-img-overlay"><span>Santo Domingo</span><h4>Plano de Distribución</h4></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. PUERTO MORÍN -->
+            <div class="proyecto-card-grande" id="puerto">
+                <div class="proyecto-info">
+                    <div class="proyecto-info-texto">
+                        <span class="subtitulo">Arquitectura de Playa</span>
+                        <h2>Puerto Morín</h2>
+                        <p>Casa de playa concebida bajo un concepto fresco y abierto, maximizando la ventilación natural, las vistas al mar y la conexión directa a través de grandes ventanales.</p>
+                    </div>
+                    <div class="proyecto-badge-contador">5 Vistas 3D</div>
+                </div>
+                <div class="proyecto-imagenes-grid">
+                    <div class="proyecto-img-item principal" data-img="imagenes/Morin1.jpg">
+                        <img src="imagenes/Morin1.jpg" alt="Puerto Morín 1" loading="lazy" onerror="this.src='imagenes/Morin1.png'">
+                        <div class="proyecto-img-overlay"><span>Puerto Morín</span><h4>Fachada e Iluminación Nocturna</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Morin2.jpg">
+                        <img src="imagenes/Morin2.jpg" alt="Puerto Morín 2" loading="lazy" onerror="this.src='imagenes/Morin2.png'">
+                        <div class="proyecto-img-overlay"><span>Puerto Morín</span><h4>Área de Piscina y Terraza</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Morin3.jpg">
+                        <img src="imagenes/Morin3.jpg" alt="Puerto Morín 3" loading="lazy" onerror="this.src='imagenes/Morin3.png'">
+                        <div class="proyecto-img-overlay"><span>Puerto Morín</span><h4>Vista Lateral de Piscina</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Morin4.jpg">
+                        <img src="imagenes/Morin4.jpg" alt="Puerto Morín 4" loading="lazy" onerror="this.src='imagenes/Morin4.png'">
+                        <div class="proyecto-img-overlay"><span>Puerto Morín</span><h4>Detalle de Patios y Luces</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Morin5.jpg">
+                        <img src="imagenes/Morin5.jpg" alt="Puerto Morín 5" loading="lazy" onerror="this.src='imagenes/Morin5.png'">
+                        <div class="proyecto-img-overlay"><span>Puerto Morín</span><h4>Vestíbulo / Interior</h4></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. ESPAÑOLA -->
+            <div class="proyecto-card-grande" id="espanola">
+                <div class="proyecto-info">
+                    <div class="proyecto-info-texto">
+                        <span class="subtitulo">Residencial Exclusivo</span>
+                        <h2>Española</h2>
+                        <p>Zona social interior caracterizada por un diseño minimalista y cálido, estanterías verticales con iluminación LED integrada, muebles flotantes y detalles de gran sofisticación.</p>
+                    </div>
+                    <div class="proyecto-badge-contador">6 Vistas 3D</div>
+                </div>
+                <div class="proyecto-imagenes-grid">
+                    <div class="proyecto-img-item principal" data-img="imagenes/Española1.png">
+                        <img src="imagenes/Española1.png" alt="Española 1" loading="lazy" onerror="this.src='imagenes/Española1.jpg'">
+                        <div class="proyecto-img-overlay"><span>Española</span><h4>Área Social Principal</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Española2.png">
+                        <img src="imagenes/Española2.png" alt="Española 2" loading="lazy" onerror="this.src='imagenes/Española2.jpg'">
+                        <div class="proyecto-img-overlay"><span>Española</span><h4>Comedor Minimalista</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Española3.png">
+                        <img src="imagenes/Española3.png" alt="Española 3" loading="lazy" onerror="this.src='imagenes/Española3.jpg'">
+                        <div class="proyecto-img-overlay"><span>Española</span><h4>Sala de Estar</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Española4.png">
+                        <img src="imagenes/Española4.png" alt="Española 4" loading="lazy" onerror="this.src='imagenes/Española4.jpg'">
+                        <div class="proyecto-img-overlay"><span>Española</span><h4>Mueble TV Flotante</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Española5.png">
+                        <img src="imagenes/Española5.png" alt="Española 5" loading="lazy" onerror="this.src='imagenes/Española5.jpg'">
+                        <div class="proyecto-img-overlay"><span>Española</span><h4>Detalle Estantería LED</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Española6.png">
+                        <img src="imagenes/Española6.png" alt="Española 6" loading="lazy" onerror="this.src='imagenes/Española6.jpg'">
+                        <div class="proyecto-img-overlay"><span>Española</span><h4>Vista Comedor</h4></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. HUANCHACO -->
+            <div class="proyecto-card-grande" id="huanchaco">
+                <div class="proyecto-info">
+                    <div class="proyecto-info-texto">
+                        <span class="subtitulo">Arquitectura Costera & Moderna</span>
+                        <h2>Huanchaco</h2>
+                        <p>Espacios sociales de concepto abierto que integran comedores sofisticados con mobiliario en tonos claros y cocinas vanguardistas con islas revestidas en madera listonada.</p>
+                    </div>
+                    <div class="proyecto-badge-contador">11 Vistas 3D</div>
+                </div>
+                <div class="proyecto-imagenes-grid">
+                    <div class="proyecto-img-item principal" data-img="imagenes/Huanchaco1.png">
+                        <img src="imagenes/Huanchaco1.png" alt="Huanchaco 1" loading="lazy" onerror="this.src='imagenes/Huanchaco1.jpg'">
+                        <div class="proyecto-img-overlay"><span>Huanchaco</span><h4>Comedor & Cocina Abierta</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Huanchaco2.png">
+                        <img src="imagenes/Huanchaco2.png" alt="Huanchaco 2" loading="lazy" onerror="this.src='imagenes/Huanchaco2.jpg'">
+                        <div class="proyecto-img-overlay"><span>Huanchaco</span><h4>Sala Principal</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Huanchaco3.png">
+                        <img src="imagenes/Huanchaco3.png" alt="Huanchaco 3" loading="lazy" onerror="this.src='imagenes/Huanchaco3.jpg'">
+                        <div class="proyecto-img-overlay"><span>Huanchaco</span><h4>Área Social</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Huanchaco4.png">
+                        <img src="imagenes/Huanchaco4.png" alt="Huanchaco 4" loading="lazy" onerror="this.src='imagenes/Huanchaco4.jpg'">
+                        <div class="proyecto-img-overlay"><span>Huanchaco</span><h4>Comedor Sofisticado</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Huanchaco5.png">
+                        <img src="imagenes/Huanchaco5.png" alt="Huanchaco 5" loading="lazy" onerror="this.src='imagenes/Huanchaco5.jpg'">
+                        <div class="proyecto-img-overlay"><span>Huanchaco</span><h4>Cocina con Isla Listonada</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Huanchaco6.png">
+                        <img src="imagenes/Huanchaco6.png" alt="Huanchaco 6" loading="lazy" onerror="this.src='imagenes/Huanchaco6.jpg'">
+                        <div class="proyecto-img-overlay"><span>Huanchaco</span><h4>Vista Interior</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Huanchaco7.png">
+                        <img src="imagenes/Huanchaco7.png" alt="Huanchaco 7" loading="lazy" onerror="this.src='imagenes/Huanchaco7.jpg'">
+                        <div class="proyecto-img-overlay"><span>Huanchaco</span><h4>Dormitorio Costero</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Huanchaco8.png">
+                        <img src="imagenes/Huanchaco8.png" alt="Huanchaco 8" loading="lazy" onerror="this.src='imagenes/Huanchaco8.jpg'">
+                        <div class="proyecto-img-overlay"><span>Huanchaco</span><h4>Fachada Moderna</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Huanchaco9.png">
+                        <img src="imagenes/Huanchaco9.png" alt="Huanchaco 9" loading="lazy" onerror="this.src='imagenes/Huanchaco9.jpg'">
+                        <div class="proyecto-img-overlay"><span>Huanchaco</span><h4>Volumetría Nocturna</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Huanchaco10.png">
+                        <img src="imagenes/Huanchaco10.png" alt="Huanchaco 10" loading="lazy" onerror="this.src='imagenes/Huanchaco10.jpg'">
+                        <div class="proyecto-img-overlay"><span>Huanchaco</span><h4>Sala de Descanso</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Huanchaco11.png">
+                        <img src="imagenes/Huanchaco11.png" alt="Huanchaco 11" loading="lazy" onerror="this.src='imagenes/Huanchaco11.jpg'">
+                        <div class="proyecto-img-overlay"><span>Huanchaco</span><h4>Terraza Exterior</h4></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. LUZ DE SOL -->
+            <div class="proyecto-card-grande" id="luzsol">
+                <div class="proyecto-info">
+                    <div class="proyecto-info-texto">
+                        <span class="subtitulo">Diseño Residencial Contemporáneo</span>
+                        <h2>Luz de Sol</h2>
+                        <p>Residencia contemporánea de dos niveles orientada al confort exterior, destacando por su área de piscina, pasarelas de jardín y amplios ventanales que fusionan los espacios.</p>
+                    </div>
+                    <div class="proyecto-badge-contador">10 Vistas 3D</div>
+                </div>
+                <div class="proyecto-imagenes-grid">
+                    <div class="proyecto-img-item principal" data-img="imagenes/Luz1.png">
+                        <img src="imagenes/Luz1.png" alt="Luz 1" loading="lazy" onerror="this.src='imagenes/Luz1.jpg'">
+                        <div class="proyecto-img-overlay"><span>Luz de Sol</span><h4>Cocina & Barra</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Luz2.png">
+                        <img src="imagenes/Luz2.png" alt="Luz 2" loading="lazy" onerror="this.src='imagenes/Luz2.jpg'">
+                        <div class="proyecto-img-overlay"><span>Luz de Sol</span><h4>Baño Principal</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Luz3.png">
+                        <img src="imagenes/Luz3.png" alt="Luz 3" loading="lazy" onerror="this.src='imagenes/Luz3.jpg'">
+                        <div class="proyecto-img-overlay"><span>Luz de Sol</span><h4>Detalle Sanitario</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Luz4.png">
+                        <img src="imagenes/Luz4.png" alt="Luz 4" loading="lazy" onerror="this.src='imagenes/Luz4.jpg'">
+                        <div class="proyecto-img-overlay"><span>Luz de Sol</span><h4>Piscina y Fachada</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Luz5.png">
+                        <img src="imagenes/Luz5.png" alt="Luz 5" loading="lazy" onerror="this.src='imagenes/Luz5.jpg'">
+                        <div class="proyecto-img-overlay"><span>Luz de Sol</span><h4>Área de Piscina</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Luz6.png">
+                        <img src="imagenes/Luz6.png" alt="Luz 6" loading="lazy" onerror="this.src='imagenes/Luz6.jpg'">
+                        <div class="proyecto-img-overlay"><span>Luz de Sol</span><h4>Vista Posterior</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Luz7.png">
+                        <img src="imagenes/Luz7.png" alt="Luz 7" loading="lazy" onerror="this.src='imagenes/Luz7.jpg'">
+                        <div class="proyecto-img-overlay"><span>Luz de Sol</span><h4>Pasarelas de Jardín</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Luz8.png">
+                        <img src="imagenes/Luz8.png" alt="Luz 8" loading="lazy" onerror="this.src='imagenes/Luz8.jpg'">
+                        <div class="proyecto-img-overlay"><span>Luz de Sol</span><h4>Iluminación Exterior</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Luz9.png">
+                        <img src="imagenes/Luz9.png" alt="Luz 9" loading="lazy" onerror="this.src='imagenes/Luz9.jpg'">
+                        <div class="proyecto-img-overlay"><span>Luz de Sol</span><h4>Residencia Externa</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Luz10.png">
+                        <img src="imagenes/Luz10.png" alt="Luz 10" loading="lazy" onerror="this.src='imagenes/Luz10.jpg'">
+                        <div class="proyecto-img-overlay"><span>Luz de Sol</span><h4>Volumetría General</h4></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. MONTEMAR MOCHE -->
+            <div class="proyecto-card-grande" id="montemar">
+                <div class="proyecto-info">
+                    <div class="proyecto-info-texto">
+                        <span class="subtitulo">Desarrollo Residencial Exclusivo</span>
+                        <h2>Montemar Moche</h2>
+                        <p>Conjunto residencial de alta gama ubicado en el valle de Moche, diseñado para aprovechar el entorno natural con volumetrías limpias, amplias terrazas y acabados en piedra y madera.</p>
+                    </div>
+                    <div class="proyecto-badge-contador">12 Vistas 3D</div>
+                </div>
+                <div class="proyecto-imagenes-grid">
+                    <div class="proyecto-img-item principal" data-img="imagenes/Moche1.jpg">
+                        <img src="imagenes/Moche1.jpg" alt="Moche 1" loading="lazy" onerror="this.src='imagenes/Moche1.png'">
+                        <div class="proyecto-img-overlay"><span>Montemar Moche</span><h4>Vista General del Proyecto</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Moche2.jpg">
+                        <img src="imagenes/Moche2.jpg" alt="Moche 2" loading="lazy" onerror="this.src='imagenes/Moche2.png'">
+                        <div class="proyecto-img-overlay"><span>Montemar Moche</span><h4>Jardín Interior y Paisajismo</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Moche3.jpg">
+                        <img src="imagenes/Moche3.jpg" alt="Moche 3" loading="lazy" onerror="this.src='imagenes/Moche3.png'">
+                        <div class="proyecto-img-overlay"><span>Montemar Moche</span><h4>Cocina Moderna con Isla</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Moche4.jpg">
+                        <img src="imagenes/Moche4.jpg" alt="Moche 4" loading="lazy" onerror="this.src='imagenes/Moche4.png'">
+                        <div class="proyecto-img-overlay"><span>Montemar Moche</span><h4>Terraza y Zona Parrillera</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Moche5.jpg">
+                        <img src="imagenes/Moche5.jpg" alt="Moche 5" loading="lazy" onerror="this.src='imagenes/Moche5.png'">
+                        <div class="proyecto-img-overlay"><span>Montemar Moche</span><h4>Fachada Nocturna</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Moche6.jpg">
+                        <img src="imagenes/Moche6.jpg" alt="Moche 6" loading="lazy" onerror="this.src='imagenes/Moche6.png'">
+                        <div class="proyecto-img-overlay"><span>Montemar Moche</span><h4>Sala de Estar</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Moche7.jpg">
+                        <img src="imagenes/Moche7.jpg" alt="Moche 7" loading="lazy" onerror="this.src='imagenes/Moche7.png'">
+                        <div class="proyecto-img-overlay"><span>Montemar Moche</span><h4>Volumen Frontal</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Moche8.jpg">
+                        <img src="imagenes/Moche8.jpg" alt="Moche 8" loading="lazy" onerror="this.src='imagenes/Moche8.png'">
+                        <div class="proyecto-img-overlay"><span>Montemar Moche</span><h4>Comedor Social</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Moche9.jpg">
+                        <img src="imagenes/Moche9.jpg" alt="Moche 9" loading="lazy" onerror="this.src='imagenes/Moche9.png'">
+                        <div class="proyecto-img-overlay"><span>Montemar Moche</span><h4>Área Social Integrada</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Moche10.jpg">
+                        <img src="imagenes/Moche10.jpg" alt="Moche 10" loading="lazy" onerror="this.src='imagenes/Moche10.png'">
+                        <div class="proyecto-img-overlay"><span>Montemar Moche</span><h4>Detalle de Comedor y Sillas</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Moche11.jpg">
+                        <img src="imagenes/Moche11.jpg" alt="Moche 11" loading="lazy" onerror="this.src='imagenes/Moche11.png'">
+                        <div class="proyecto-img-overlay"><span>Montemar Moche</span><h4>Detalle de Cocina y Horno</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Moche12.jpg">
+                        <img src="imagenes/Moche12.jpg" alt="Moche 12" loading="lazy" onerror="this.src='imagenes/Moche12.png'">
+                        <div class="proyecto-img-overlay"><span>Montemar Moche</span><h4>Fachada Exterior Completa</h4></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. PEDREGAL -->
+            <div class="proyecto-card-grande" id="pedregal">
+                <div class="proyecto-info">
+                    <div class="proyecto-info-texto">
+                        <span class="subtitulo">Gran Desarrollo Residencial</span>
+                        <h2>Pedregal</h2>
+                        <p>Desarrollo residencial de gran envergadura que destaca por el diseño interior de sus habitaciones principales, integrando paneles de madera texturizada, iluminación indirecta cálida, mobiliario personalizado y clósets modernos con puertas de cristal.</p>
+                    </div>
+                    <div class="proyecto-badge-contador">18 Vistas 3D</div>
+                </div>
+                <div class="proyecto-imagenes-grid">
+                    <div class="proyecto-img-item principal" data-img="imagenes/Pedregal1.png">
+                        <img src="imagenes/Pedregal1.png" alt="Pedregal 1" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Pedregal</span><h4>Comedor & Cocina Integrada</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Pedregal2.png">
+                        <img src="imagenes/Pedregal2.png" alt="Pedregal 2" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Pedregal</span><h4>Vista Amplia de Zona Social</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Pedregal3.png">
+                        <img src="imagenes/Pedregal3.png" alt="Pedregal 3" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Pedregal</span><h4>Sala de Estar y Chimenea</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Pedregal4.png">
+                        <img src="imagenes/Pedregal4.png" alt="Pedregal 4" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Pedregal</span><h4>Área Social con Sofás</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Pedregal5.png">
+                        <img src="imagenes/Pedregal5.png" alt="Pedregal 5" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Pedregal</span><h4>Dormitorio Principal (Vista 1)</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Pedregal6.png">
+                        <img src="imagenes/Pedregal6.png" alt="Pedregal 6" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Pedregal</span><h4>Dormitorio Principal (Vista 2)</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Pedregal7.png">
+                        <img src="imagenes/Pedregal7.png" alt="Pedregal 7" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Pedregal</span><h4>Dormitorio Principal (Vista 3)</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Pedregal8.png">
+                        <img src="imagenes/Pedregal8.png" alt="Pedregal 8" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Pedregal</span><h4>Habitación con Clóset Abierto</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Pedregal9.png">
+                        <img src="imagenes/Pedregal9.png" alt="Pedregal 9" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Pedregal</span><h4>Dormitorio de Gemelas / Doble</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Pedregal10.png">
+                        <img src="imagenes/Pedregal10.png" alt="Pedregal 10" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Pedregal</span><h4>Dormitorio Doble (Gemelas 2)</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Pedregal11.png">
+                        <img src="imagenes/Pedregal11.png" alt="Pedregal 11" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Pedregal</span><h4>Dormitorio Matrimonial</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Pedregal12.png">
+                        <img src="imagenes/Pedregal12.png" alt="Pedregal 12" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Pedregal</span><h4>Habit
+                                                <div class="proyecto-img-item" data-img="imagenes/Pedregal14.png">
+                        <img src="imagenes/Pedregal14.png" alt="Pedregal 14" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Pedregal</span><h4>Baño Secundario</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Pedregal15.png">
+                        <img src="imagenes/Pedregal15.png" alt="Pedregal 15" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Pedregal</span><h4>Baño Principal Lujo</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Pedregal16.png">
+                        <img src="imagenes/Pedregal16.png" alt="Pedregal 16" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Pedregal</span><h4>Zona de Estudio</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Pedregal17.png">
+                        <img src="imagenes/Pedregal17.png" alt="Pedregal 17" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Pedregal</span><h4>Pasillo y Distribución</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Pedregal18.png">
+                        <img src="imagenes/Pedregal18.png" alt="Pedregal 18" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Pedregal</span><h4>Fachada Exterior Final</h4></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. TARAPOTO -->
+            <div class="proyecto-card-grande" id="tarapoto">
+                <div class="proyecto-info">
+                    <div class="proyecto-info-texto">
+                        <span class="subtitulo">Residencia Selvática & Abierta</span>
+                        <h2>Tarapoto</h2>
+                        <p>Proyecto diseñado para el clima cálido de la selva norte, con amplios espacios abiertos, ventilación cruzada, techos altos, materiales locales y una integración total con la vegetación circundante.</p>
+                    </div>
+                    <div class="proyecto-badge-contador">9 Vistas 3D</div>
+                </div>
+                <div class="proyecto-imagenes-grid">
+                    <div class="proyecto-img-item principal" data-img="imagenes/Tarapoto1.png">
+                        <img src="imagenes/Tarapoto1.png" alt="Tarapoto 1" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Tarapoto</span><h4>Fachada Principal y Jardín</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Tarapoto2.png">
+                        <img src="imagenes/Tarapoto2.png" alt="Tarapoto 2" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Tarapoto</span><h4>Sala Abierta al Exterior</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Tarapoto3.png">
+                        <img src="imagenes/Tarapoto3.png" alt="Tarapoto 3" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Tarapoto</span><h4>Comedor con Vista Verde</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Tarapoto4.png">
+                        <img src="imagenes/Tarapoto4.png" alt="Tarapoto 4" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Tarapoto</span><h4>Cocina Abierta y Ventilada</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Tarapoto5.png">
+                        <img src="imagenes/Tarapoto5.png" alt="Tarapoto 5" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Tarapoto</span><h4>Dormitorio con Balcón</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Tarapoto6.png">
+                        <img src="imagenes/Tarapoto6.png" alt="Tarapoto 6" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Tarapoto</span><h4>Terraza y Área de Recreación</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Tarapoto7.png">
+                        <img src="imagenes/Tarapoto7.png" alt="Tarapoto 7" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Tarapoto</span><h4>Pasillo Exterior Cubierto</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Tarapoto8.png">
+                        <img src="imagenes/Tarapoto8.png" alt="Tarapoto 8" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Tarapoto</span><h4>Detalle de Estructura y Madera</h4></div>
+                    </div>
+                    <div class="proyecto-img-item" data-img="imagenes/Tarapoto9.png">
+                        <img src="imagenes/Tarapoto9.png" alt="Tarapoto 9" loading="lazy">
+                        <div class="proyecto-img-overlay"><span>Tarapoto</span><h4>Vista Panorámica del Conjunto</h4></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox-modal" id="lightbox">
+        <span class="lightbox-cerrar" id="lightboxCerrar">&times;</span>
+        <img src="" alt="Imagen ampliada" class="lightbox-contenido" id="lightboxImg">
+    </div>
+
+    <!-- BOTÓN VOLVER ARRIBA -->
+    <a href="#" class="boton-volver-arriba" id="btnVolverArriba">&uarr;</a>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Aldo Puga Arquitectura — Todos los derechos reservados</p>
+        <br>
+        <p>Trujillo, Perú | <span class="texto-italica-serif">diseño & visión</span></p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // Barra de progreso de scroll
+        const scrollProgress = document.getElementById('scrollProgress');
+        window.addEventListener('scroll', () => {
+            const altoTotal = document.body.scrollHeight - window.innerHeight;
+            const progreso = (window.scrollY / altoTotal) * 100;
+            scrollProgress.style.width = progreso + '%';
+        });
+
+        // Navbar efecto al scrollear
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Menú móvil
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('activo');
+        });
+
+        // Cerrar menú al hacer clic en un enlace
+        navLinks.querySelectorAll('a').forEach(enlace => {
+            enlace.addEventListener('click', () => {
+                navLinks.classList.remove('activo');
+            });
+        });
+
+        // Lightbox
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxCerrar = document.getElementById('lightboxCerrar');
+        const imagenesProyecto = document.querySelectorAll('.proyecto-img-item');
+
+        imagenesProyecto.forEach(item => {
+            item.addEventListener('click', () => {
+                const rutaImg = item.getAttribute('data-img');
+                lightboxImg.src = rutaImg;
+                lightbox.classList.add('activo');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        lightboxCerrar.addEventListener('click', cerrarLightbox);
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) cerrarLightbox();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') cerrarLightbox();
+        });
+
+        function cerrarLightbox() {
+            lightbox.classList.remove('activo');
+            document.body.style.overflow = '';
+            setTimeout(() => { lightboxImg.src = ''; }, 400);
+        }
+
+        // Botón volver arriba
+        const btnVolverArriba = document.getElementById('btnVolverArriba');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                btnVolverArriba.classList.add('visible');
+            } else {
+                btnVolverArriba.classList.remove('visible');
+            }
+        });
+        btnVolverArriba.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

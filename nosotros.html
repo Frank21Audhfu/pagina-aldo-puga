@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros | Aldo Puga Arquitectura</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+:root {
+    --bg-color: #040404;
+    --bg-surface: #0a0a0a;
+    --card-bg: #0e0e0e;
+    --card-hover: #141414;
+    --white: #f4f1ea;
+    --text-muted: #a3a3a3;
+    --accent-gold: #c5a880;
+    --border-color: rgba(197, 168, 128, 0.2);
+    --border-subtle: rgba(255, 255, 255, 0.07);
+    --transition-smooth: all 0.4s ease;
+    --shadow-suave: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background-color: var(--bg-color);
+    color: var(--white);
+    font-family: 'Manrope', sans-serif;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+a, button { cursor: pointer; border: none; background: none; font-family: inherit; }
+.contenedor { max-width: 1350px; margin: 0 auto; padding: 0 6%; }
+.subtitulo { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: var(--accent-gold); display: block; margin-bottom: 10px; font-weight: 700; }
+.texto-italica-serif { font-family: 'Playfair Display', serif; font-style: italic; color: var(--accent-gold); }
+
+/* Barra de Progreso */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-gold), #d4b894);
+    width: 0%;
+    z-index: 99999;
+    transition: width 0.1s ease;
+}
+
+/* Navegación */
+.navbar {
+    position: fixed;
+    top: 0; left: 0; width: 100%;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 25px 5%;
+    background: rgba(4, 4, 4, 0.95);
+    backdrop-filter: blur(15px);
+    z-index: 1000;
+    border-bottom: 1px solid transparent;
+    transition: var(--transition-smooth);
+}
+.navbar.scrolled {
+    padding: 18px 5%;
+    background: rgba(4, 4, 4, 0.98);
+    border-bottom: 1px solid var(--border-subtle);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+}
+.logo a {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: 3px;
+    font-weight: 700;
+}
+.menu-btn { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+.menu-btn span { width: 25px; height: 2px; background: var(--white); transition: 0.3s; }
+.nav-links { display: flex; gap: 25px; align-items: center; }
+.nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: color 0.3s ease;
+    font-weight: 600;
+}
+.nav-links a:hover, .nav-links a.enlace-activo { color: var(--accent-gold); }
+
+/* Sección Nosotros */
+.seccion-nosotros {
+    padding: 190px 0 130px 0;
+    background-color: var(--bg-color);
+}
+.nosotros-cabecera {
+    margin-bottom: 80px;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 45px;
+}
+.nosotros-cabecera h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 6.5vw, 72px);
+    margin: 0 0 15px 0;
+}
+.nosotros-cabecera p {
+    color: var(--text-muted);
+    font-size: 17px;
+    max-width: 700px;
+    line-height: 1.8;
+}
+.nosotros-grid-principal {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    align-items: center;
+    margin-bottom: 130px;
+}
+.nosotros-texto h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4.2vw, 44px);
+    margin-bottom: 25px;
+    line-height: 1.25;
+}
+.nosotros-texto p {
+    color: var(--text-muted);
+    font-size: 16.5px;
+    line-height: 1.9;
+    margin-bottom: 25px;
+}
+.nosotros-imagen-wrap {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 35px 70px rgba(0,0,0,0.85);
+}
+.nosotros-imagen-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(15%) brightness(0.95);
+    transition: transform 0.7s ease;
+}
+.nosotros-imagen-wrap:hover img { transform: scale(1.05); }
+
+/* Pilares */
+.pilares-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 35px;
+}
+.pilar-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 50px 40px;
+    transition: var(--transition-smooth);
+}
+.pilar-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--border-color);
+    background: var(--card-hover);
+}
+.pilar-numero {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: var(--accent-gold);
+    display: block;
+    margin-bottom: 18px;
+    font-weight: 700;
+}
+.pilar-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    color: #fff;
+    margin-bottom: 14px;
+}
+.pilar-card p {
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.8;
+    margin: 0;
+}
+
+/* BOTÓN VOLVER ARRIBA */
+.boton-volver-arriba {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--accent-gold);
+    color: var(--bg-color);
+    border-radius: 50%;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-suave);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: var(--transition-smooth);
+    z-index: 999;
+}
+.boton-volver-arriba.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.boton-volver-arriba:hover {
+    background-color: #d4b894;
+    transform: translateY(-3px);
+}
+
+/* Footer */
+footer {
+    padding: 60px 0;
+    background-color: #020202;
+    border-top: 1px solid var(--border-subtle);
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    letter-spacing: 2px;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+    .nav-links { position: fixed; top: 0; right: -100%; height: 100vh; width: 280px; background: #0a0a0a; flex-direction: column; padding: 80px 30px; gap: 20px; border-left: 1px solid var(--border-subtle); transition: right 0.4s ease; }
+    .nav-links.activo { right: 0; }
+    .menu-btn { display: flex; z-index: 1001; }
+}
+@media (max-width: 900px) {
+    .nosotros-grid-principal, .pilares-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+    .boton-volver-arriba { bottom: 25px; right: 25px; width: 44px; height: 44px; font-size: 18px; }
+    .seccion-nosotros { padding: 150px 0 100px 0; }
+}
+    </style>
+</head>
+<body>
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <header class="navbar" id="navbar">
+        <div class="logo"><a href="index.html">ALDO PUGA</a></div>
+        <div class="menu-btn" id="menuBtn"><span></span><span></span><span></span></div>
+        <nav class="nav-links" id="navLinks">
+            <a href="index.html">Inicio</a>
+            <a href="nosotros.html" class="enlace-activo">Nosotros</a>
+            <a href="servicios.html">Servicios</a>
+            <a href="proyectos.html">Proyectos</a>
+            <a href="galeria.html">Galería</a>
+            <a href="equipo.html">Equipo</a>
+            <a href="contacto.html">Contacto</a>
+        </nav>
+    </header>
+
+    <section class="seccion-nosotros">
+        <div class="contenedor">
+            <div class="nosotros-cabecera">
+                <span class="subtitulo">Filosofía del Estudio</span>
+                <h1>El Estudio <span class="texto-italica-serif">Aldo Puga</span>.</h1>
+                <p>Arquitectura y construcción concebidas como un equilibrio absoluto entre estética, funcionalidad y precisión técnica rigurosa.</p>
+            </div>
+
+            <div class="nosotros-grid-principal">
+                <div class="nosotros-texto">
+                    <h2>Rigurosidad conceptual y ejecución impecable en cada obra.</h2>
+                    <p>Fundado bajo una visión contemporánea y altamente exigente, nuestro estudio en Trujillo se especializa en transformar requerimientos complejos en soluciones arquitectónicas armónicas, estéticas y de durabilidad comprobada.</p>
+                    <p>Creemos firmemente que la arquitectura debe dialogar respetuosamente con su entorno, optimizando la ventilación cruzada, el asoleamiento y la materialidad local para crear refugios donde la vida fluya con absoluta comodidad.</p>
+                </div>
+                <div class="nosotros-imagen-wrap">
+                    <img src="imagenes/Render2.png" alt="Estudio Aldo Puga Arquitectura" loading="lazy" onerror="this.src='imagenes/Render1.jpg'">
+                </div>
+            </div>
+
+            <div class="pilares-grid">
+                <div class="pilar-card">
+                    <span class="pilar-numero">01</span>
+                    <h3>Diseño Atemporal</h3>
+                    <p>Creamos estancias que no responden a modas pasajeras, sino a una estética sobria, limpia y de valor permanente.</p>
+                </div>
+                <div class="pilar-card">
+                    <span class="pilar-numero">02</span>
+                    <h3>Precisión Constructiva</h3>
+                    <p>Aseguramos que cada plano y detalle estructural se ejecute con un control de calidad milimétrico en campo.</p>
+                </div>
+                <div class="pilar-card">
+                    <span class="pilar-numero">03</span>
+                    <h3>Conexión con el Entorno</h3>
+                    <p>Maximizamos la iluminación natural integrando orgánicamente la obra con los jardines y paisajes circundantes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BOTÓN VOLVER ARRIBA -->
+    <button class="boton-volver-arriba" id="btnVolverArriba" aria-label="Volver arriba">
+        ↑
+    </button>
+
+    <footer>
+        <div class="contenedor">
+            <p>© 2026 Aldo Puga - Arquitectura y Construcción.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Barra de progreso y navbar al hacer scroll
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById('scrollProgress').style.width = (winScroll / height) * 100 + '%';
+            
+            if (window.scrollY > 50) {
+                document.getElementById('navbar').classList.add('scrolled');
+            } else {
+                document.getElementById('navbar').classList.remove('scrolled');
+            }
+            
+            // Mostrar/ocultar botón volver arriba
+            if (window.scrollY > 300) {
+                document.getElementById('btnVolverArriba').classList.add('visible');
+            } else {
+                document.getElementById('btnVolverArriba').classList.remove('visible');
+            }
+        });
+
+        // Menú móvil
+        document.getElementById('menuBtn').addEventListener('click', () => {
+            document.getElementById('navLinks').classList.toggle('activo');
+        });
+
+        // Cerrar menú al hacer clic en un enlace
+        document.querySelectorAll('#navLinks a').forEach(enlace => {
+            enlace.addEventListener('click', () => {
+                document.getElementById('navLinks').classList.remove('activo');
+            });
+        });
+
+        // Volver arriba
+        document.getElementById('btnVolverArriba').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
